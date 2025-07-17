@@ -37,8 +37,8 @@ async function connect() {
         connectButton.disabled = true;
         disconnectButton.disabled = false;
         statusSpan.textContent = 'Connected';
-        statusSpan.classList.remove('disconnected');
-        statusSpan.classList.add('connected');
+        statusSpan.classList.remove('bg-danger');
+        statusSpan.classList.add('bg-success');
     } catch (err) {
         console.error('Connection error', err);
     }
@@ -60,8 +60,8 @@ async function disconnect() {
         connectButton.disabled = false;
         disconnectButton.disabled = true;
         statusSpan.textContent = 'Disconnected';
-        statusSpan.classList.remove('connected');
-        statusSpan.classList.add('disconnected');
+        statusSpan.classList.remove('bg-success');
+        statusSpan.classList.add('bg-danger');
     }
 }
 
