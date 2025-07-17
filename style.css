@@ -11,10 +11,19 @@ body {
     margin-bottom: 20px;
 }
 
-#chart {
+.chart-container {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-container canvas {
     flex: 1 1 auto;
 }
 
+.stats {
+    background: #f8f9fa;
+}
 
 .terminal {
     width: 100%;
