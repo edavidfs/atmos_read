@@ -4,90 +4,31 @@ const baudInput = document.getElementById('baudrate');
 const statusSpan = document.getElementById('status');
 const terminal = document.getElementById('terminal');
 
-const tempStatsEls = {
-    min: document.getElementById('temp-min'),
-    max: document.getElementById('temp-max'),
-    mean: document.getElementById('temp-mean')
-};
-const humStatsEls = {
-    min: document.getElementById('hum-min'),
-    max: document.getElementById('hum-max'),
-    mean: document.getElementById('hum-mean')
-};
-const presStatsEls = {
-    min: document.getElementById('pres-min'),
-    max: document.getElementById('pres-max'),
-    mean: document.getElementById('pres-mean')
-};
-
-// Register the zoom plugin from the global provided by the script tag
-Chart.register(window.ChartZoom);
-
 let port;
 let reader;
-let tempChart;
-let humChart;
-let presChart;
+let chart;
 let sample = 1;
 
-const stats = {
-    temp: { min: null, max: null, sum: 0, count: 0 },
-    hum: { min: null, max: null, sum: 0, count: 0 },
-    pres: { min: null, max: null, sum: 0, count: 0 }
-};
-
-function updateStats(stat, value, els) {
-    if (stat.min === null || value < stat.min) stat.min = value;
-    if (stat.max === null || value > stat.max) stat.max = value;
-    stat.sum += value;
-    stat.count += 1;
-    els.min.textContent = stat.min.toFixed(2);
-    els.max.textContent = stat.max.toFixed(2);
-    els.mean.textContent = (stat.sum / stat.count).toFixed(2);
-}
-
-function initCharts() {
-    const zoomOptions = {
-        pan: { enabled: true, mode: 'x' },
-        zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'x' }
-    };
-
-    const ctxT = document.getElementById('tempChart').getContext('2d');
-    tempChart = new Chart(ctxT, {
+function initChart() {
+    const ctx = document.getElementById('dataChart').getContext('2d');
+    chart = new Chart(ctx, {
         type: 'line',
-        data: { labels: [], datasets: [{ label: 'Temperature (°C)', data: [], borderColor: 'red', fill: false }] },
+        data: {
+            labels: [],
+            datasets: [
+                { label: 'Temperature (°C)', data: [], borderColor: 'red', fill: false },
+                { label: 'Humidity (%)', data: [], borderColor: 'blue', fill: false },
+                { label: 'Pressure (hPa)', data: [], borderColor: 'green', fill: false }
+            ]
+        },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             animation: false,
-            plugins: { zoom: zoomOptions },
-            scales: { x: { title: { display: true, text: 'Sample' } }, y: { title: { display: true, text: '°C' } } }
-        }
-    });
-
-    const ctxH = document.getElementById('humChart').getContext('2d');
-    humChart = new Chart(ctxH, {
-        type: 'line',
-        data: { labels: [], datasets: [{ label: 'Humidity (%)', data: [], borderColor: 'blue', fill: false }] },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: false,
-            plugins: { zoom: zoomOptions },
-            scales: { x: { title: { display: true, text: 'Sample' } }, y: { title: { display: true, text: '%' } } }
-        }
-    });
-
-    const ctxP = document.getElementById('presChart').getContext('2d');
-    presChart = new Chart(ctxP, {
-        type: 'line',
-        data: { labels: [], datasets: [{ label: 'Pressure (hPa)', data: [], borderColor: 'green', fill: false }] },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: false,
-            plugins: { zoom: zoomOptions },
-            scales: { x: { title: { display: true, text: 'Sample' } }, y: { title: { display: true, text: 'hPa' } } }
+            scales: {
+                x: { title: { display: true, text: 'Sample' } },
+                y: { title: { display: true, text: 'Value' } }
+            }
         }
     });
 }
@@ -167,22 +108,14 @@ function parseLine(line) {
     const hum = parseFloat(parts[2]);
     const pres = parseFloat(parts[3]);
 
-    tempChart.data.labels.push(sample);
-    humChart.data.labels.push(sample);
-    presChart.data.labels.push(sample);
+    chart.data.labels.push(sample);
     sample += 1;
 
-    tempChart.data.datasets[0].data.push(temp);
-    humChart.data.datasets[0].data.push(hum);
-    presChart.data.datasets[0].data.push(pres);
+    chart.data.datasets[0].data.push(temp);
+    chart.data.datasets[1].data.push(hum);
+    chart.data.datasets[2].data.push(pres);
 
-    tempChart.update('none');
-    humChart.update('none');
-    presChart.update('none');
-
-    updateStats(stats.temp, temp, tempStatsEls);
-    updateStats(stats.hum, hum, humStatsEls);
-    updateStats(stats.pres, pres, presStatsEls);
+    chart.update('none');
 }
 
 connectButton.addEventListener('click', () => {
@@ -193,5 +126,5 @@ disconnectButton.addEventListener('click', () => {
     disconnect();
 });
 
-// Initialize empty charts so they are visible even before connecting
-initCharts();
+// Initialize empty chart so it is visible even before connecting
+initChart();
