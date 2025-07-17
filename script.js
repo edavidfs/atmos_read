@@ -1,5 +1,8 @@
 const connectButton = document.getElementById('connect');
+const disconnectButton = document.getElementById('disconnect');
 const baudInput = document.getElementById('baudrate');
+const statusSpan = document.getElementById('status');
+const terminal = document.getElementById('terminal');
 let port;
 let reader;
 let chart;
@@ -32,8 +35,33 @@ async function connect() {
         await port.open({ baudRate: parseInt(baudInput.value, 10) });
         readLoop();
         connectButton.disabled = true;
+        disconnectButton.disabled = false;
+        statusSpan.textContent = 'Connected';
+        statusSpan.classList.remove('disconnected');
+        statusSpan.classList.add('connected');
     } catch (err) {
         console.error('Connection error', err);
+    }
+}
+
+async function disconnect() {
+    try {
+        if (reader) {
+            await reader.cancel();
+        }
+        if (port) {
+            await port.close();
+        }
+    } catch (err) {
+        console.error('Disconnection error', err);
+    } finally {
+        reader = null;
+        port = null;
+        connectButton.disabled = false;
+        disconnectButton.disabled = true;
+        statusSpan.textContent = 'Disconnected';
+        statusSpan.classList.remove('connected');
+        statusSpan.classList.add('disconnected');
     }
 }
 
@@ -51,7 +79,12 @@ async function readLoop() {
                 let lines = buffer.split(/\r?\n/);
                 buffer = lines.pop();
                 for (const line of lines) {
-                    parseLine(line.trim());
+                    const clean = line.trim();
+                    if (clean) {
+                        terminal.textContent += clean + '\n';
+                        terminal.scrollTop = terminal.scrollHeight;
+                        parseLine(clean);
+                    }
                 }
             }
         }
@@ -81,4 +114,8 @@ function parseLine(line) {
 connectButton.addEventListener('click', () => {
     if (!chart) initChart();
     connect();
+});
+
+disconnectButton.addEventListener('click', () => {
+    disconnect();
 });

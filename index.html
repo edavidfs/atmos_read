@@ -14,8 +14,11 @@
             <input type="number" id="baudrate" value="9600">
         </label>
         <button id="connect">Connect</button>
+        <button id="disconnect" disabled>Disconnect</button>
+        <span id="status" class="status disconnected">Disconnected</span>
     </div>
     <canvas id="chart" width="400" height="200"></canvas>
+    <pre id="terminal" class="terminal"></pre>
     <script src="script.js"></script>
 </body>
 </html>
