@@ -6,31 +6,42 @@ const terminal = document.getElementById('terminal');
 
 let port;
 let reader;
-let chart;
+let tempChart;
+let humChart;
+let presChart;
 let sample = 1;
 
-function initChart() {
-    const ctx = document.getElementById('dataChart').getContext('2d');
-    chart = new Chart(ctx, {
+// Register zoom plugin from the global ChartZoom variable loaded in index.html
+if (window.ChartZoom) {
+    Chart.register(window.ChartZoom);
+}
+
+function createChart(ctx, label, color) {
+    return new Chart(ctx, {
         type: 'line',
-        data: {
-            labels: [],
-            datasets: [
-                { label: 'Temperature (°C)', data: [], borderColor: 'red', fill: false },
-                { label: 'Humidity (%)', data: [], borderColor: 'blue', fill: false },
-                { label: 'Pressure (hPa)', data: [], borderColor: 'green', fill: false }
-            ]
-        },
+        data: { labels: [], datasets: [{ label, data: [], borderColor: color, fill: false }] },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             animation: false,
+            plugins: {
+                zoom: {
+                    zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'x' },
+                    pan: { enabled: true, mode: 'x' }
+                }
+            },
             scales: {
                 x: { title: { display: true, text: 'Sample' } },
                 y: { title: { display: true, text: 'Value' } }
             }
         }
     });
+}
+
+function initCharts() {
+    tempChart = createChart(document.getElementById('tempChart').getContext('2d'), 'Temperature (°C)', 'red');
+    humChart = createChart(document.getElementById('humChart').getContext('2d'), 'Humidity (%)', 'blue');
+    presChart = createChart(document.getElementById('presChart').getContext('2d'), 'Pressure (hPa)', 'green');
 }
 
 async function connect() {
@@ -108,14 +119,29 @@ function parseLine(line) {
     const hum = parseFloat(parts[2]);
     const pres = parseFloat(parts[3]);
 
-    chart.data.labels.push(sample);
+    tempChart.data.labels.push(sample);
+    humChart.data.labels.push(sample);
+    presChart.data.labels.push(sample);
     sample += 1;
 
-    chart.data.datasets[0].data.push(temp);
-    chart.data.datasets[1].data.push(hum);
-    chart.data.datasets[2].data.push(pres);
+    tempChart.data.datasets[0].data.push(temp);
+    humChart.data.datasets[0].data.push(hum);
+    presChart.data.datasets[0].data.push(pres);
 
-    chart.update('none');
+    tempChart.update('none');
+    humChart.update('none');
+    presChart.update('none');
+
+    updateStats(tempChart.data.datasets[0].data, 'tempStats');
+    updateStats(humChart.data.datasets[0].data, 'humStats');
+    updateStats(presChart.data.datasets[0].data, 'presStats');
+}
+
+function updateStats(values, elementId) {
+    const min = Math.min(...values).toFixed(2);
+    const max = Math.max(...values).toFixed(2);
+    const mean = (values.reduce((a, b) => a + b, 0) / values.length).toFixed(2);
+    document.getElementById(elementId).textContent = `min: ${min} max: ${max} mean: ${mean}`;
 }
 
 connectButton.addEventListener('click', () => {
@@ -126,5 +152,5 @@ disconnectButton.addEventListener('click', () => {
     disconnect();
 });
 
-// Initialize empty chart so it is visible even before connecting
-initChart();
+// Initialize empty charts so they are visible even before connecting
+initCharts();
