@@ -20,7 +20,8 @@ const presStatsEls = {
     mean: document.getElementById('pres-mean')
 };
 
-Chart.register(window['chartjs-plugin-zoom']);
+// Register the zoom plugin from the global provided by the script tag
+Chart.register(window.ChartZoom);
 
 let port;
 let reader;
@@ -185,10 +186,12 @@ function parseLine(line) {
 }
 
 connectButton.addEventListener('click', () => {
-    if (!tempChart) initCharts();
     connect();
 });
 
 disconnectButton.addEventListener('click', () => {
     disconnect();
 });
+
+// Initialize empty charts so they are visible even before connecting
+initCharts();
