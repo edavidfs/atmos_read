@@ -10,45 +10,47 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1"></script>
 </head>
 <body class="container-fluid h-100 d-flex flex-column">
-    <h1 class="mb-3">Atmos Read</h1>
-    <div id="controls" class="mb-3">
-        <div class="row g-2 align-items-end">
-            <div class="col-auto">
-                <label for="baudrate" class="form-label mb-0">Baud Rate</label>
-            </div>
-            <div class="col-auto">
-                <input type="number" id="baudrate" class="form-control" value="9600">
-            </div>
-            <div class="col-auto">
-                <button id="connect" class="btn btn-primary">Connect</button>
-            </div>
-            <div class="col-auto">
-                <button id="disconnect" class="btn btn-secondary" disabled>Disconnect</button>
-            </div>
-            <div class="col-auto">
-                <span id="status" class="badge bg-danger">Disconnected</span>
+    <div id="top" class="mb-2 d-flex flex-column">
+        <h1 class="mb-3">Atmos Read</h1>
+        <div id="controls">
+            <div class="row g-2 align-items-end">
+                <div class="col-auto">
+                    <label for="baudrate" class="form-label mb-0">Baud Rate</label>
+                </div>
+                <div class="col-auto">
+                    <input type="number" id="baudrate" class="form-control" value="9600">
+                </div>
+                <div class="col-auto">
+                    <button id="connect" class="btn btn-primary">Connect</button>
+                </div>
+                <div class="col-auto">
+                    <button id="disconnect" class="btn btn-secondary" disabled>Disconnect</button>
+                </div>
+                <div class="col-auto">
+                    <span id="status" class="badge bg-danger">Disconnected</span>
+                </div>
             </div>
         </div>
     </div>
-    <div id="charts" class="flex-grow-1 d-flex flex-column mb-2">
-        <div class="chart-container mb-2 flex-grow-1">
-            <canvas id="tempChart" class="w-100 flex-grow-1"></canvas>
+    <div id="charts" class="mb-2 d-flex">
+        <div class="chart-container me-2">
+            <canvas id="tempChart" class="w-100 h-100"></canvas>
             <div class="stats small text-center">
                 <span>min: <span id="temp-min">-</span></span>
                 <span class="mx-2">max: <span id="temp-max">-</span></span>
                 <span>mean: <span id="temp-mean">-</span></span>
             </div>
         </div>
-        <div class="chart-container mb-2 flex-grow-1">
-            <canvas id="humChart" class="w-100 flex-grow-1"></canvas>
+        <div class="chart-container mx-2">
+            <canvas id="humChart" class="w-100 h-100"></canvas>
             <div class="stats small text-center">
                 <span>min: <span id="hum-min">-</span></span>
                 <span class="mx-2">max: <span id="hum-max">-</span></span>
                 <span>mean: <span id="hum-mean">-</span></span>
             </div>
         </div>
-        <div class="chart-container mb-2 flex-grow-1">
-            <canvas id="presChart" class="w-100 flex-grow-1"></canvas>
+        <div class="chart-container ms-2">
+            <canvas id="presChart" class="w-100 h-100"></canvas>
             <div class="stats small text-center">
                 <span>min: <span id="pres-min">-</span></span>
                 <span class="mx-2">max: <span id="pres-max">-</span></span>
@@ -56,7 +58,7 @@
             </div>
         </div>
     </div>
-    <pre id="terminal" class="terminal mb-2 flex-shrink-0"></pre>
+    <pre id="terminal" class="terminal"></pre>
     <script src="script.js"></script>
 </body>
 </html>
