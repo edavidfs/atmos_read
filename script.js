@@ -11,6 +11,7 @@ let humChart;
 let presChart;
 let sample = 1;
 
+
 // Register zoom plugin from the global ChartZoom variable loaded in index.html
 if (window.ChartZoom) {
     Chart.register(window.ChartZoom);
@@ -21,12 +22,15 @@ function createChart(ctx, label, color) {
         type: 'line',
         data: { labels: [], datasets: [{ label, data: [], borderColor: color, fill: false }] },
         options: {
-            responsive: true,
+            responsive: false,
             maintainAspectRatio: false,
             animation: false,
             plugins: {
+                legend: {
+                    position: 'top',
+                },
                 zoom: {
-                    zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'x' },
+                    //zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'x' },
                     pan: { enabled: true, mode: 'x' }
                 }
             },
@@ -52,8 +56,8 @@ async function connect() {
         connectButton.disabled = true;
         disconnectButton.disabled = false;
         statusSpan.textContent = 'Connected';
-        statusSpan.classList.remove('bg-danger');
-        statusSpan.classList.add('bg-success');
+        statusSpan.classList.remove('bg-red-500');
+        statusSpan.classList.add('bg-green-500');
     } catch (err) {
         console.error('Connection error', err);
     }
@@ -75,8 +79,8 @@ async function disconnect() {
         connectButton.disabled = false;
         disconnectButton.disabled = true;
         statusSpan.textContent = 'Disconnected';
-        statusSpan.classList.remove('bg-success');
-        statusSpan.classList.add('bg-danger');
+        statusSpan.classList.remove('bg-green-500');
+        statusSpan.classList.add('bg-red-500');
     }
 }
 
