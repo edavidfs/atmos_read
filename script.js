@@ -132,6 +132,14 @@ function parseLine(line) {
     humChart.data.datasets[0].data.push(hum);
     presChart.data.datasets[0].data.push(pres);
 
+    // Keep only the last 300 samples
+    [tempChart, humChart, presChart].forEach((chart) => {
+        if (chart.data.labels.length > 300) {
+            chart.data.labels.shift();
+            chart.data.datasets[0].data.shift();
+        }
+    });
+
     tempChart.update('none');
     humChart.update('none');
     presChart.update('none');
