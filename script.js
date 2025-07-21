@@ -112,12 +112,12 @@ async function readLoop() {
 
 function parseLine(line) {
     // Expected format: THP,tt.tt,hh.hh,pp.pp
-    if (!line.startsWith('THP')) return;
+    if (!line.startsWith('TPH')) return;
     const parts = line.split(',');
     if (parts.length !== 4) return;
     const temp = parseFloat(parts[1]);
-    const hum = parseFloat(parts[2]);
-    const pres = parseFloat(parts[3]);
+    const hum = parseFloat(parts[3]);
+    const pres = parseFloat(parts[2]);
 
     tempChart.data.labels.push(sample);
     humChart.data.labels.push(sample);
