@@ -1,7 +1,47 @@
 body {
     font-family: Arial, sans-serif;
     padding: 20px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow: hidden;
 }
-#controls {
-    margin-bottom: 20px;
+
+#top {
+    flex: 0 0 25%;
+}
+
+#charts {
+    flex: 0 0 50%;
+    display: flex;
+}
+
+.chart-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.chart-wrapper canvas {
+    flex: 1 1 auto;
+    width: 100%;
+    height: 100% !important;
+}
+
+.stats {
+    text-align: center;
+    font-size: 0.8rem;
+}
+
+.terminal {
+    width: 100%;
+    flex: 0 0 25%;
+    background: #000;
+    color: #0f0;
+    padding: 5px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    font-family: monospace;
+    border: 1px solid #ccc;
 }
