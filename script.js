@@ -11,6 +11,7 @@ let humChart;
 let presChart;
 let sample = 1;
 
+
 // Register zoom plugin from the global ChartZoom variable loaded in index.html
 if (window.ChartZoom) {
     Chart.register(window.ChartZoom);
@@ -21,12 +22,15 @@ function createChart(ctx, label, color) {
         type: 'line',
         data: { labels: [], datasets: [{ label, data: [], borderColor: color, fill: false }] },
         options: {
-            responsive: true,
+            responsive: false,
             maintainAspectRatio: false,
             animation: false,
             plugins: {
+                legend: {
+                    position: 'top',
+                },
                 zoom: {
-                    zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'x' },
+                    //zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'x' },
                     pan: { enabled: true, mode: 'x' }
                 }
             },
